@@ -1,0 +1,229 @@
+openapi: 3.0.1
+info:
+  version: 1.0.0
+  title: 読書ログアプリケーションAPI仕様
+servers:
+  - url: 'http://localhost:3000/api/v1/books'
+
+paths:
+  /books:
+    get:
+      summary: 読書ログ取得API
+      description: ログインしているユーザーの読書ログを取得します。
+      parameters:
+        - $ref: "#/components/parameters/Headers"
+            
+      responses:
+        200:
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetBooks"
+    post:
+      summary: 読書ログ登録API
+      description: 読書ログを登録します。
+      parameters:
+        - $ref: "#/components/parameters/Headers"
+      requestBody:
+        $ref: "#/components/requestBodies/Book"
+      responses:
+        200:
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateBook"
+        400:
+          description: 失敗時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotCreatedBook"
+  /book/{id}:
+    put:
+      summary: 読書ログ更新API
+      description: 読書ログを更新します。
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - $ref: "#/components/parameters/Headers"
+      requestBody:
+        $ref: "#/components/requestBodies/Book"
+      responses:
+        200:
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateBook"
+        400:
+          description: 失敗時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotUpdateBook"
+    delete:
+      summary: 読書ログ削除API
+      description: 読書ログを削除します。
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - $ref: "#/components/parameters/Headers"
+      responses:
+        200:
+          description: 成功時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DeleteBook"
+        400:
+          description: 失敗時のレスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotDeleteBook"
+
+
+components:
+  parameters:
+    BookId:
+      name: BookId
+      in: path
+      description: 書籍ID
+      required: true
+      schema: { type:integer }
+    Headers:
+      name: header
+      in: header
+      required: true
+      schema:
+        $ref: "#/components/schemas/Header"
+
+  requestBodies:
+    Book:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookData'
+
+  schemas:
+    Header:
+      description: 認証情報
+      type: object
+      properties:
+        uid:
+          type: string
+        access-token:
+          type: string
+        client:
+          type: string
+    BookData:
+      description: 読書ログ
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user_id:
+          type: integer
+          example: 1
+        book_name:
+          type: string
+          example: 書籍名
+        author:
+          type: string
+          example: 著者名
+        summary:
+          type: string
+          example: 感想
+    GetBooks:
+      description: 読書ログ情報を取得したときのレスポンス
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            example: 1
+          user_id:
+            type: integer
+            example: 1
+          book_name:
+            type: string
+            example: 書籍名
+          author:
+            type: string
+            example: 著者名
+          summary:
+            type: string
+            example: 感想
+    CreateBook:
+      description: 読書ログを登録したときのレスポンス
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 書籍ID
+        email:
+          type: string
+          example: ユーザーのメールアドレス
+        message:
+          type: string
+          example: 成功しました
+    NotCreatedBook:
+      description: 読書ログを作成失敗したときのレスポンス
+      type: object
+      properties:
+        message:
+          type: string
+          example: 保存できませんでした
+        errors:
+          type: string
+          example: エラー文
+    UpdateBook:
+      description: 読書ログを更新したときのレスポンス
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 書籍ID
+        email:
+          type: string
+          example: ユーザーのメールアドレス
+        message:
+          type: string
+          example: 更新しました
+    NotUpdateBook:
+      description: 読書ログ更新に失敗したときのレスポンス
+      type: object
+      properties:
+        message:
+          type: string
+          example: 更新に失敗しました
+        errors:
+          type: string
+          example: エラー文
+    DeleteBook:
+      description: 読書ログを削除したときのレスポンス
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 書籍ID
+        email:
+          type: string
+          example: ユーザーのメールアドレス
+        message:
+          type: string
+          example: 削除に成功しました
+    NotDeleteBook:
+      description: 読書ログ削除に失敗したときのレスポンス
+      type: object
+      properties:
+        message:
+          type: string
+          example: 削除できませんでした
+        errors:
+          type: string
+          example: エラー文
+
