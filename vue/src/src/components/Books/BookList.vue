@@ -24,6 +24,9 @@
 
 <script>
 import axios from 'axios'
+import GetHeaders from '../../book/getHeaders'
+const getHeaders = new GetHeaders
+
 export default {
     data() {
         return {
@@ -37,9 +40,9 @@ export default {
             try {
                 const res = await axios.get('http://localhost:3000/api/v1/books', {
                     headers: {
-                        uid: window.localStorage.getItem('uid'),
-                        "access-token": window.localStorage.getItem('access-token'),
-                        client: window.localStorage.getItem('client')
+                        uid: getHeaders.getUid(),
+                        "access-token": getHeaders.getAccessToken(),
+                        client: getHeaders.getClient()
                     }
                 })
 
@@ -57,9 +60,9 @@ export default {
             try {
                 const res = await axios.delete(`http://localhost:3000/api/v1/books/${id}`, {
                     headers: {
-                        uid: window.localStorage.getItem('uid'),
-                        "access-token": window.localStorage.getItem('access-token'),
-                        client: window.localStorage.getItem('client')
+                        uid: getHeaders.getUid(),
+                        "access-token": getHeaders.getAccessToken(),
+                        client: getHeaders.getClient()
                     }
                 })
 

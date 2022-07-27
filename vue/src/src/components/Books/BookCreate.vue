@@ -22,6 +22,9 @@
 
 <script>
 import axios from 'axios'
+import GetHeaders from '../../book/GetHeaders'
+const getHeaders = new GetHeaders
+
 export default {
     data() {
         return {
@@ -41,9 +44,9 @@ export default {
                     summary: this.summary
                 }, {
                     headers: {
-                        uid: window.localStorage.getItem('uid'),
-                        "access-token": window.localStorage.getItem('access-token'),
-                        client: window.localStorage.getItem('client')
+                        uid: getHeaders.getUid(),
+                        "access-token": getHeaders.getAccessToken(),
+                        client: getHeaders.getClient()
                     }
                 })
 
